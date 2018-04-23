@@ -78,7 +78,6 @@ class WebrtcConnection
 
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
-            console.log("working");
             clearInterval(this.timer);
             this.channel = this.ably.channels.get(this.channelName);
             this.presence = this.channel.presence;
@@ -141,7 +140,7 @@ class WebrtcConnection
                 {
                     if (member.action == 'leave')
                     {
-                        reset();
+                        this.reset();
                     }
                     else if (member.action == 'enter')
                     {
@@ -164,6 +163,7 @@ class WebrtcConnection
                     }
                 }
             });
+            console.log("working");
             this.activateButtons();
 
         }
