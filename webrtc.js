@@ -161,8 +161,9 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
                 }
             });
             this.activateButtons();
-            return;
+
         }
+        return;
 
     };
     this.activateButtons = function ()
