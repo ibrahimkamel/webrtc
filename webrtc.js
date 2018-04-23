@@ -21,7 +21,6 @@ class WebrtcConnection
         {
             authUrl: '/auth/api/' + this.channelName
         });
-        this.timer = undefined;
         this.timer = setInterval(this.InitiateConnections, 500);
         this.callType = callType;
         this.callMute = false;
@@ -76,9 +75,10 @@ class WebrtcConnection
     }
     InitiateConnections()
     {
-
+        
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
+            console.log("working");
             clearInterval(this.timer);
             this.channel = this.ably.channels.get(this.channelName);
             this.presence = this.channel.presence;
@@ -141,7 +141,7 @@ class WebrtcConnection
                 {
                     if (member.action == 'leave')
                     {
-                        this.reset();
+                        reset();
                     }
                     else if (member.action == 'enter')
                     {
@@ -164,11 +164,9 @@ class WebrtcConnection
                     }
                 }
             });
-
             this.activateButtons();
-
+            return;
         }
-        return;
     }
     activateButtons()
     {
