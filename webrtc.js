@@ -75,9 +75,10 @@ class WebrtcConnection
     }
     InitiateConnections()
     {
-        console.log("working");
+        
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
+            console.log("working");
             clearInterval(timer);
             this.channel = this.ably.channels.get(this.channelName);
             this.presence = this.channel.presence;
