@@ -72,7 +72,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
     };
     this.InitiateConnections = function ()
     {
-        console.log("working");
+        console.log(this.ably);
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
             clearInterval(this.timer);
@@ -161,9 +161,9 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
                 }
             });
             this.activateButtons();
-
+            return;
         }
-        return;
+
 
     };
     this.activateButtons = function ()
