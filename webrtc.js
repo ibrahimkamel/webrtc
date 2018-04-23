@@ -19,7 +19,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             authUrl: '/auth/api/' + this.channelName
         });
-        console.log(this.ably);
+        // console.log(this.ably);
         this.timer = setInterval(this.InitiateConnections, 500);
         this.callType = callType;
         this.callMute = false;
@@ -74,7 +74,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
     };
     this.InitiateConnections = function ()
     {
-        console.log(this.ably);
+        console.log("working");
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
             clearInterval(this.timer);
@@ -163,9 +163,9 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
                 }
             });
             this.activateButtons();
-
+            return;
         }
-        return;
+        
     };
     this.activateButtons = function ()
     {
