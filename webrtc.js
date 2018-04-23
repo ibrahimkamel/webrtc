@@ -19,9 +19,6 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             authUrl: '/auth/api/' + this.channelName
         });
-        console.log(this.ably);
-        
-        console.log(this.timer);
         this.callType = callType;
         this.callMute = false;
         this.startCallBtn = startCallBtn;
