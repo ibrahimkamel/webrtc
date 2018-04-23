@@ -21,6 +21,7 @@ class WebrtcConnection
         {
             authUrl: '/auth/api/' + this.channelName
         });
+        this.timer = undefined;
         this.timer = setInterval(this.InitiateConnections, 500);
         this.callType = callType;
         this.callMute = false;
@@ -177,7 +178,6 @@ class WebrtcConnection
         this.endCallBtn.addEventListener("click", this.endCall);
         this.endCallBtn.disabled = false;
         this.endCallBtn.style.visibility = 'visible';
-        console.log("working");
     }
     startCall()
     {
