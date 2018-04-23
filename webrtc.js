@@ -21,7 +21,7 @@ class WebrtcConnection
         {
             authUrl: '/auth/api/' + this.channelName
         });
-        this.timer = setInterval(this.InitiateConnections, 500);
+        this.timer = setInterval(InitiateConnections, 500);
         this.callType = callType;
         this.callMute = false;
         this.startCallBtn = startCallBtn;
