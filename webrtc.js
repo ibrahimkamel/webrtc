@@ -2,6 +2,8 @@
 function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCallBtn, muteCallBtn, localVideoDiv, remoteVideoDiv,
         callType)
 {
+
+        var self = this;
         this.userName = userName;
         this.channelName = channelName;
         this.pcConfig = pcConfig;
@@ -32,14 +34,18 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.muteCallBtn = muteCallBtn;
         this.muteCallBtn.disabled = true;
         this.muteCallBtn.style.visibility = 'hidden';
-    
-    function sendMessage (message)
+
+}
+
+
+
+    WebrtcConnection.prototype.sendMessage  = function(message)
     {
         message['userName'] = this.userName;
         this.channel.publish(this.channelName, JSON.stringify(message));
         console.log('Message Sent on Channel' + this.channelName);
-    }
-    function createPeerConnection  ()
+    };
+    WebrtcConnection.prototype.createPeerConnection   = function()
     {
         try
         {
@@ -71,8 +77,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
-    }
-    function InitiateConnections  ()
+    };
+    WebrtcConnection.prototype.InitiateConnections   = function()
     {
         console.log(this);
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
@@ -166,8 +172,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
 
         }
         return;
-    }
-    function activateButtons  ()
+    };
+    WebrtcConnection.prototype.activateButtons   = function()
     {
         this.startCallBtn.addEventListener("click", this.startCall);
         this.startCallBtn.disabled = true;
@@ -175,8 +181,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.endCallBtn.addEventListener("click", this.endCall);
         this.endCallBtn.disabled = false;
         this.endCallBtn.style.visibility = 'visible';
-    }
-    function startCall()
+    };
+    WebrtcConnection.prototype.startCall = function()
     {
         if (this.callType == 'video')
         {
@@ -200,8 +206,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
                 alert('getUserMedia() error: ' + e.name);
             });
         }
-    }
-    function gotStream(stream)
+    };
+    WebrtcConnection.prototype.gotStream = function(stream)
     {
         this.localVideoStream = stream;
         var video = document.createElement("video");
@@ -222,8 +228,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.muteCallBtn.addEventListener("click", this.muteCall);
         this.muteCallBtn.disabled = false;
         this.muteCallBtn.style.visibility = 'visible';
-    }
-    function handleIceCandidateData(event)
+    };
+    WebrtcConnection.prototype.handleIceCandidateData = function(event)
     {
         if (event.candidate)
         {
@@ -240,8 +246,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             console.log('End of candidates.');
         }
-    }
-    function handleIceCandidate(event)
+    };
+    WebrtcConnection.prototype.handleIceCandidate = function(event)
     {
         console.log('icecandidate event: ', event);
         if (event.candidate)
@@ -259,12 +265,12 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             console.log('End of candidates.');
         }
-    }
-    function handleCreateOfferError(event)
+    };
+    WebrtcConnection.prototype.handleCreateOfferError = function(event)
     {
         console.log('createOffer() error: ', event);
-    }
-    function doAnswer(isDataChannel)
+    };
+    WebrtcConnection.prototype.doAnswer = function(isDataChannel)
     {
         if (isDataChannel)
         {
@@ -274,8 +280,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             this.VideoPeerConnection.createAnswer().then(this.setLocalAndSendMessage, this.onCreateSessionDescriptionError);
         }
-    }
-    function setLocalAndSendMessage(sessionDescription)
+    };
+    WebrtcConnection.prototype.setLocalAndSendMessage = function(sessionDescription)
     {
         this.VideoPeerConnection.setLocalDescription(sessionDescription);
         this.sendMessage(
@@ -284,8 +290,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
             sdp: sessionDescription.sdp,
             isDataChannel: false
         });
-    }
-    function setLocalAndSendMessageData(sessionDescription)
+    };
+    WebrtcConnection.prototype.setLocalAndSendMessageData = function(sessionDescription)
     {
         this.DataPeerConnection.setLocalDescription(sessionDescription);
         this.sendMessage(
@@ -294,10 +300,10 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
             sdp: sessionDescription.sdp,
             isDataChannel: true
         });
-    }
-    function onCreateSessionDescriptionError(error)
-    {}
-    function handleRemoteStreamAdded(event)
+    };
+    WebrtcConnection.prototype.onCreateSessionDescriptionError = function(error)
+    {};
+    WebrtcConnection.prototype.handleRemoteStreamAdded = function(event)
     {
         this.remoteVideoStream = event.stream;
         var video = document.createElement("video");
@@ -307,14 +313,14 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         video.controls = true;
         video.style.width = '100%';
         this.remoteVideoDiv.appendChild(video);
-    }
-    function handleRemoteStreamRemoved(event)
+    };
+    WebrtcConnection.prototype.handleRemoteStreamRemoved = function(event)
     {
         this.VideoPeerConnection.removeStream(this.remoteVideoStream);
         this.remoteVideoStream = null;
         this.remoteVideoDiv.innerHTML = '';
-    }
-    function muteCall()
+    };
+    WebrtcConnection.prototype.muteCall = function()
     {
         if (!this.callMute)
         {
@@ -342,8 +348,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
             this.callMute = !this.callMute;
             this.muteCallBtn.innerHTML = 'Muted';
         }
-    }
-    function endCall()
+    };
+    WebrtcConnection.prototype.endCall = function()
     {
         this.VideoPeerConnection.removeStream(this.localVideoStream);
         this.localVideoStream = null;
@@ -355,8 +361,8 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.endCallBtn.style.visibility = 'hidden';
         this.muteCallBtn.disabled = true;
         this.muteCallBtn.style.visibility = 'hidden';
-    }
-    function reset()
+    };
+    WebrtcConnection.prototype.reset = function()
     {
         this.VideoPeerConnection.close();
         this.VideoPeerConnection = null;
@@ -364,5 +370,5 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.DataPeerConnection.close();
         this.DataPeerConnection = null;
         this.isInitiatorDataChannel = false;
-    }
-}
+    };
+module.exports = SimpleWebRTC;
