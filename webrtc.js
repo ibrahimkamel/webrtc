@@ -365,15 +365,3 @@ class WebrtcConnection
         this.isInitiatorDataChannel = false;
     }
 }
-var startCallBtn = document.getElementById('startCallBtn');
-var endCallBtn = document.getElementById('endCallBtn');
-var muteCallBtn = document.getElementById('muteCallBtn');
-var localVideoDiv = document.getElementById('localVideoDiv');
-var remoteVideoDiv = document.getElementById('remoteVideoDiv');
-new WebrtcConnection('ibrahim', 'webrtc',
-{
-    'iceServers': [
-    {
-        'urls': 'stun:stun.l.google.com:19302'
-    }]
-}, startCallBtn, endCallBtn, muteCallBtn, localVideoDiv, remoteVideoDiv, 'video');
