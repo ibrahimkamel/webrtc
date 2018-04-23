@@ -163,7 +163,7 @@ class WebrtcConnection
                     }
                 }
             });
-            console.log("working");
+
             this.activateButtons();
 
         }
@@ -177,6 +177,7 @@ class WebrtcConnection
         this.endCallBtn.addEventListener("click", this.endCall);
         this.endCallBtn.disabled = false;
         this.endCallBtn.style.visibility = 'visible';
+        console.log("working");
     }
     startCall()
     {
