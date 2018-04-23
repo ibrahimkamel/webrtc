@@ -19,8 +19,9 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         {
             authUrl: '/auth/api/' + this.channelName
         });
-        // console.log(this.ably);
-        this.timer = setInterval(this.InitiateConnections, 500);
+        console.log(this.ably);
+        
+        console.log(this.timer);
         this.callType = callType;
         this.callMute = false;
         this.startCallBtn = startCallBtn;
@@ -365,4 +366,5 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.DataPeerConnection = null;
         this.isInitiatorDataChannel = false;
     };
+    this.timer = setInterval(this.InitiateConnections, 500);
 }
