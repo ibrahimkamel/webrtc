@@ -75,6 +75,7 @@ class WebrtcConnection
     }
     InitiateConnections()
     {
+        console.log("working");
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
             clearInterval(timer);
