@@ -139,7 +139,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
                 {
                     if (member.action == 'leave')
                     {
-                        reset();
+                        this.reset();
                     }
                     else if (member.action == 'enter')
                     {
@@ -165,7 +165,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
             this.activateButtons();
             return;
         }
-        
+
     };
     this.activateButtons = function ()
     {
