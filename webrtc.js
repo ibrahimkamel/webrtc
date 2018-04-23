@@ -75,7 +75,7 @@ class WebrtcConnection
     }
     InitiateConnections()
     {
-        
+
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
             console.log("working");
@@ -165,8 +165,9 @@ class WebrtcConnection
                 }
             });
             this.activateButtons();
-            return;
+            
         }
+        return;
     }
     activateButtons()
     {
