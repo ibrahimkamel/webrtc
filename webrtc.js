@@ -31,7 +31,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.muteCallBtn.disabled = true;
         this.muteCallBtn.style.visibility = 'hidden';
 
-    this.sendMessage = function(message)
+    this.prototype.sendMessage = function(message)
     {
         message['userName'] = this.userName;
         this.channel.publish(this.channelName, JSON.stringify(message));
@@ -70,7 +70,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
     };
-    this.InitiateConnections = function ()
+    this.prototype.InitiateConnections = function ()
     {
         console.log(this);
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
