@@ -70,7 +70,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
     };
-    this.prototype.InitiateConnections = function ()
+    WebrtcConnection.prototype.InitiateConnections = function ()
     {
         console.log(this);
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
