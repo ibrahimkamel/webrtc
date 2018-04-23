@@ -80,7 +80,7 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
     };
     WebrtcConnection.prototype.InitiateConnections   = function()
     {
-        console.log(this);
+        console.log(this.ably);
         if (this.ably && this.ably.auth && this.ably.auth.tokenDetails)
         {
             clearInterval(this.timer);
@@ -371,4 +371,3 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.DataPeerConnection = null;
         this.isInitiatorDataChannel = false;
     };
-module.exports = SimpleWebRTC;
