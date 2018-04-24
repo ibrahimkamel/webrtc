@@ -67,102 +67,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
     };
-    var InitiateConnections = function()
-    {
-        if (ably && ably.auth && ably.auth.tokenDetails)
-        {
-            clearInterval(timer);
-            console.log(ably.auth.tokenDetails);
-            channel = ably.channels.get(channelName);
-            presence = channel.presence;
-            channel.subscribe(channelName, function(message)
-            {
-                message.data = JSON.parse(message.data);
-                if (message.data.userName != userName)
-                {
-                    if (message.data.type === 'offer')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    else
-                    {
-                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    doAnswer(message.data.isDataChannel);
-                    activateButtons();
-                }
-                    else if (message.data.type === 'answer')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    else
-                    {
-                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    activateButtons();
-                }
-                    else if (message.data.type === 'candidate')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        var candidate = new RTCIceCandidate(
-                        {
-                            sdpMLineIndex: message.data.label,
-                            candidate: message.data.candidate
-                        });
-                        DataPeerConnection.addIceCandidate(candidate);
-                    }
-                    else
-                    {
-                        var candidate = new RTCIceCandidate(
-                        {
-                            sdpMLineIndex: message.data.label,
-                            candidate: message.data.candidate
-                        });
-                        VideoPeerConnection.addIceCandidate(candidate);
-                    }
-                }
-                }
-
-            });
-            presence.enter();
-            presence.subscribe(function(member)
-            {
-                if (member.clientId != ably.auth.tokenDetails.clientId)
-                {
-                    if (member.action == 'leave')
-                    {
-                        reset();
-                    }
-                    else if (member.action == 'enter')
-                    {
-                        isInitiatorVideo = true;
-                        isInitiatorDataChannel = true;
-                        createPeerConnection();
-                    }
-                }
-                else if (member.clientId == ably.auth.tokenDetails.clientId)
-                {
-                    if (member.action == 'leave')
-                    {
-                        reset();
-                    }
-                    else if (member.action == 'enter')
-                    {
-                        isInitiatorVideo = false;
-                        isInitiatorDataChannel = false;
-                        createPeerConnection();
-                    }
-                }
-            });
-            return;
-        }
-
-    };
+    
     var activateButtons = function()
     {
 
@@ -377,6 +282,102 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         DataPeerConnection = null;
         isInitiatorDataChannel = false;
         console.log('DataPeerConnection is closed.');
+    };
+    var InitiateConnections = function()
+    {
+        if (ably && ably.auth && ably.auth.tokenDetails)
+        {
+            clearInterval(timer);
+            console.log(ably.auth.tokenDetails);
+            channel = ably.channels.get(channelName);
+            presence = channel.presence;
+            channel.subscribe(channelName, function(message)
+            {
+                message.data = JSON.parse(message.data);
+                if (message.data.userName != userName)
+                {
+                    if (message.data.type === 'offer')
+                    {
+                    if (message.data.isDataChannel)
+                    {
+                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    else
+                    {
+                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    doAnswer(message.data.isDataChannel);
+                    activateButtons();
+                }
+                    else if (message.data.type === 'answer')
+                    {
+                    if (message.data.isDataChannel)
+                    {
+                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    else
+                    {
+                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    activateButtons();
+                }
+                    else if (message.data.type === 'candidate')
+                    {
+                    if (message.data.isDataChannel)
+                    {
+                        var candidate = new RTCIceCandidate(
+                        {
+                            sdpMLineIndex: message.data.label,
+                            candidate: message.data.candidate
+                        });
+                        DataPeerConnection.addIceCandidate(candidate);
+                    }
+                    else
+                    {
+                        var candidate = new RTCIceCandidate(
+                        {
+                            sdpMLineIndex: message.data.label,
+                            candidate: message.data.candidate
+                        });
+                        VideoPeerConnection.addIceCandidate(candidate);
+                    }
+                }
+                }
+
+            });
+            presence.enter();
+            presence.subscribe(function(member)
+            {
+                if (member.clientId != ably.auth.tokenDetails.clientId)
+                {
+                    if (member.action == 'leave')
+                    {
+                        reset();
+                    }
+                    else if (member.action == 'enter')
+                    {
+                        isInitiatorVideo = true;
+                        isInitiatorDataChannel = true;
+                        createPeerConnection();
+                    }
+                }
+                else if (member.clientId == ably.auth.tokenDetails.clientId)
+                {
+                    if (member.action == 'leave')
+                    {
+                        reset();
+                    }
+                    else if (member.action == 'enter')
+                    {
+                        isInitiatorVideo = false;
+                        isInitiatorDataChannel = false;
+                        createPeerConnection();
+                    }
+                }
+            });
+            return;
+        }
+
     };
     startCallBtn.addEventListener("click", startCall);
     endCallBtn.addEventListener("click", endCall);
