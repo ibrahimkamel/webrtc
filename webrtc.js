@@ -2,36 +2,36 @@
 function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCallBtn, muteCallBtn, localVideoDiv, remoteVideoDiv,
         callType)
 {
-       this.prototype.userName = userName;
-        this.prototype.channelName = channelName;
-        this.prototype.pcConfig = pcConfig;
-        this.prototype.isInitiatorVideo = false;
-        this.prototype.isInitiatorDataChannel = false;
-        this.prototype.localVideoStream = undefined;
-        this.prototype.remoteVideoStream = undefined;
-        this.prototype.localVideoDiv = localVideoDiv;
-        this.prototype.remoteVideoDiv = remoteVideoDiv;
-        this.prototype.VideoPeerConnection = undefined;
-        this.prototype.DataPeerConnection = undefined;
-        this.prototype.presence = undefined;
-        this.prototype.channel = undefined;
-        this.prototype.ably = new Ably.Realtime(
+       this.userName = userName;
+        this.channelName = channelName;
+        this.pcConfig = pcConfig;
+        this.isInitiatorVideo = false;
+        this.isInitiatorDataChannel = false;
+        this.localVideoStream = undefined;
+        this.remoteVideoStream = undefined;
+        this.localVideoDiv = localVideoDiv;
+        this.remoteVideoDiv = remoteVideoDiv;
+        this.VideoPeerConnection = undefined;
+        this.DataPeerConnection = undefined;
+        this.presence = undefined;
+        this.channel = undefined;
+        this.ably = new Ably.Realtime(
         {
             authUrl: '/auth/api/' + this.channelName
         });
         // console.log(this.ably);
-        this.prototype.timer = setInterval(this.InitiateConnections, 500);
-        this.prototype.callType = callType;
-        this.prototype.callMute = false;
-        this.prototype.startCallBtn = startCallBtn;
-        this.prototype.endCallBtn = endCallBtn;
-        this.prototype.startCallBtn.disabled = false;
-        this.prototype.startCallBtn.style.visibility = 'visible';
-        this.prototype.endCallBtn.disabled = true;
-        this.prototype.endCallBtn.style.visibility = 'hidden';
-        this.prototype.muteCallBtn = muteCallBtn;
-        this.prototype.muteCallBtn.disabled = true;
-        this.prototype.muteCallBtn.style.visibility = 'hidden';
+        this.timer = setInterval(this.InitiateConnections, 500);
+        this.callType = callType;
+        this.callMute = false;
+        this.startCallBtn = startCallBtn;
+        this.endCallBtn = endCallBtn;
+        this.startCallBtn.disabled = false;
+        this.startCallBtn.style.visibility = 'visible';
+        this.endCallBtn.disabled = true;
+        this.endCallBtn.style.visibility = 'hidden';
+        this.muteCallBtn = muteCallBtn;
+        this.muteCallBtn.disabled = true;
+        this.muteCallBtn.style.visibility = 'hidden';
 }
 WebrtcConnection.prototype =
     {
