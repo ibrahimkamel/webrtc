@@ -65,7 +65,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
     };
     var InitiateConnections = function () {
-        
+
         if (ably && ably.auth && ably.auth.tokenDetails) {
             clearInterval(timer);
             console.log(ably.auth.tokenDetails);
@@ -136,7 +136,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 }
             });
             activateButtons();
-            
+
         }
         return;
 
@@ -144,10 +144,10 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var activateButtons = function () {
         startCallBtn.addEventListener("click", startCall);
-        startCallBtn.disabled = true;
+        startCallBtn.disabled = false;
         startCallBtn.style.visibility = 'visible';
         endCallBtn.addEventListener("click", endCall);
-        endCallBtn.disabled = false;
+        endCallBtn.disabled = true;
         endCallBtn.style.visibility = 'hidden';
     };
     var startCall = function () {
