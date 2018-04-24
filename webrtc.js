@@ -261,9 +261,9 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         console.log('createOffer() error: ', event);
     };
-    var doAnswer = function(isDataChannel)
+    var doAnswer = function(isDataChannelFlag)
     {
-        if (isDataChannel)
+        if (isDataChannelFlag)
         {
             DataPeerConnection.createAnswer().then(setLocalAndSendMessageData, onCreateSessionDescriptionError);
             console.log('Sending DataPeerConnection answer to peer.');
@@ -376,7 +376,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         DataPeerConnection.close();
         DataPeerConnection = null;
         isInitiatorDataChannel = false;
-        
         console.log('DataPeerConnection is closed.');
     };
     startCallBtn.addEventListener("click", startCall);
