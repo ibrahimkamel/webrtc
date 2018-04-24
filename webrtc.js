@@ -65,7 +65,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
     };
     InitiateConnections = function () {
-        console.log(this);
+        console.log(ably);
         if (ably && ably.auth && ably.auth.tokenDetails) {
             clearInterval(timer);
             channel = ably.channels.get(channelName);
