@@ -33,40 +33,6 @@ function WebrtcConnection(userName, channelName, pcConfig, startCallBtn, endCall
         this.muteCallBtn.disabled = true;
         this.muteCallBtn.style.visibility = 'hidden';
 }
-WebrtcConnection.prototype =
-    {
-
-         userName : userName,
-        channelName : channelName,
-        pcConfig : pcConfig,
-        isInitiatorVideo : false,
-        isInitiatorDataChannel : false,
-        localVideoStream : undefined,
-        remoteVideoStream : undefined,
-        localVideoDiv : localVideoDiv,
-        remoteVideoDiv : remoteVideoDiv,
-        VideoPeerConnection : undefined,
-        DataPeerConnection : undefined,
-        presence : undefined,
-        channel : undefined,
-        ably : new Ably.Realtime(
-        {
-            authUrl: '/auth/api/' + this.channelName
-        }),
-        // console.log(this.ably);
-        timer : setInterval(this.InitiateConnections, 500),
-        callType : callType,
-        callMute : false,
-        startCallBtn : startCallBtn,
-        endCallBtn : endCallBtn,
-        // startCallBtn.disabled = false,
-        // startCallBtn.style.visibility = 'visible',
-        // endCallBtn.disabled = true,
-        // endCallBtn.style.visibility = 'hidden',
-        // muteCallBtn : muteCallBtn,
-        // muteCallBtn.disabled = true,
-        // muteCallBtn.style.visibility = 'hidden',
-    }
 WebrtcConnection.prototype = {
   sendMessage  : function(message)
     {
@@ -407,12 +373,3 @@ WebrtcConnection.prototype = {
         this.isInitiatorDataChannel = false;
     }
 };
-
-
-
-
-
-
-
-
-
