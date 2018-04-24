@@ -222,8 +222,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var handleIceCandidateData = function(event)
     {
         console.log('DataPeerConnection icecandidate event: ', event);
-        // if (event.candidate)
-        // {
+        if (event.candidate)
+        {
             sendMessage(
             {
                 type: 'candidate',
@@ -232,17 +232,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 candidate: event.candidate.candidate,
                 isDataChannel: true
             });
-        // }
-        // else
-        // {
-        //     console.log('DataPeerConnection End of candidates.');
-        // }
+        }
+        else
+        {
+            console.log('DataPeerConnection End of candidates.');
+        }
     };
     var handleIceCandidate = function(event)
     {
         console.log('VideoPeerConnection icecandidate event: ', event);
-        // if (event.candidate)
-        // {
+        if (event.candidate)
+        {
             sendMessage(
             {
                 type: 'candidate',
@@ -251,11 +251,11 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 candidate: event.candidate.candidate,
                 isDataChannel: false
             });
-        // }
-        // else
-        // {
-        //     console.log('VideoPeerConnection End of candidates.');
-        // }
+        }
+        else
+        {
+            console.log('VideoPeerConnection End of candidates.');
+        }
     };
     var handleCreateOfferError = function(event)
     {
@@ -376,7 +376,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         DataPeerConnection.close();
         DataPeerConnection = null;
         isInitiatorDataChannel = false;
-
+        
         console.log('DataPeerConnection is closed.');
     };
     startCallBtn.addEventListener("click", startCall);
