@@ -24,8 +24,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     startCallBtn.style.visibility = 'visible';
     endCallBtn.disabled = true;
     endCallBtn.style.visibility = 'hidden';
-    startCallBtn.addEventListener("click", startCall);
-    endCallBtn.addEventListener("click", endCall);
+    
     var muteCallBtn = muteCallBtn;
     muteCallBtn.disabled = true;
     muteCallBtn.style.visibility = 'hidden';
@@ -166,7 +165,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var activateButtons = function()
     {
-        
+
         startCallBtn.disabled = false;
         startCallBtn.style.visibility = 'visible';
         endCallBtn.disabled = true;
@@ -215,7 +214,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         startCallBtn.style.visibility = 'hidden';
         endCallBtn.disabled = false;
         endCallBtn.style.visibility = 'visible';
-        muteCallBtn.addEventListener("click", muteCall);
+        
         muteCallBtn.disabled = false;
         muteCallBtn.style.visibility = 'visible';
         console.log('local stream added.');
@@ -375,5 +374,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         isInitiatorDataChannel = false;
         console.log('DataPeerConnection is closed.');
     };
+    startCallBtn.addEventListener("click", startCall);
+    endCallBtn.addEventListener("click", endCall);
+    muteCallBtn.addEventListener("click", muteCall);
     var timer = setInterval(InitiateConnections, 500);
 };
