@@ -78,12 +78,10 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             channel.subscribe(channelName, function(message)
             {
                 message.data = JSON.parse(message.data);
-                if (message.data.userName == userName)
+                if (message.data.userName != userName)
                 {
-                    return
-                }
-                if (message.data.type === 'offer')
-                {
+                    if (message.data.type === 'offer')
+                    {
                     if (message.data.isDataChannel)
                     {
                         DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
@@ -95,8 +93,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     doAnswer(message.data.isDataChannel);
                     activateButtons();
                 }
-                else if (message.data.type === 'answer')
-                {
+                    else if (message.data.type === 'answer')
+                    {
                     if (message.data.isDataChannel)
                     {
                         DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
@@ -107,8 +105,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                     activateButtons();
                 }
-                else if (message.data.type === 'candidate')
-                {
+                    else if (message.data.type === 'candidate')
+                    {
                     if (message.data.isDataChannel)
                     {
                         var candidate = new RTCIceCandidate(
@@ -128,6 +126,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                         VideoPeerConnection.addIceCandidate(candidate);
                     }
                 }
+                }
+
             });
             presence.enter();
             presence.subscribe(function(member)
