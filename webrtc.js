@@ -24,7 +24,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     startCallBtn.style.visibility = 'visible';
     endCallBtn.disabled = true;
     endCallBtn.style.visibility = 'hidden';
-    
+
     var muteCallBtn = muteCallBtn;
     muteCallBtn.disabled = true;
     muteCallBtn.style.visibility = 'hidden';
@@ -214,7 +214,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         startCallBtn.style.visibility = 'hidden';
         endCallBtn.disabled = false;
         endCallBtn.style.visibility = 'visible';
-        
+
         muteCallBtn.disabled = false;
         muteCallBtn.style.visibility = 'visible';
         console.log('local stream added.');
@@ -327,7 +327,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             {
                 for (var i = 0; i < audioTracks.length; ++i)
                 {
-                    audioTracks[i].enabled = !call_mute;
+                    audioTracks[i].enabled = !callMute;
                 }
             }
             callMute = !callMute;
@@ -341,7 +341,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             {
                 for (var i = 0; i < audioTracks.length; ++i)
                 {
-                    audioTracks[i].enabled = !call_mute;
+                    audioTracks[i].enabled = !callMute;
                 }
             }
             callMute = !callMute;
