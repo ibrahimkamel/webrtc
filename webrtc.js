@@ -36,7 +36,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var sendMessage = function (message) {
         message['userName'] = userName;
         channel.publish(channelName, JSON.stringify(message));
-        console.log('Message Sent on Channel' + channelName);
+        console.log('Message Sent on Channel ' + channelName);
     };
     var createPeerConnection = function () {
         try {
@@ -65,9 +65,10 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
     };
     var InitiateConnections = function () {
-        console.log(ably);
+        
         if (ably && ably.auth && ably.auth.tokenDetails) {
             clearInterval(timer);
+            console.log(ably.auth.tokenDetails);
             channel = ably.channels.get(channelName);
             presence = channel.presence;
             channel.subscribe(channelName, function (message) {
@@ -135,18 +136,19 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 }
             });
             activateButtons();
-            return;
+            
         }
+        return;
 
 
     };
     var activateButtons = function () {
         startCallBtn.addEventListener("click", startCall);
         startCallBtn.disabled = true;
-        startCallBtn.style.visibility = 'hidden';
+        startCallBtn.style.visibility = 'visible';
         endCallBtn.addEventListener("click", endCall);
         endCallBtn.disabled = false;
-        endCallBtn.style.visibility = 'visible';
+        endCallBtn.style.visibility = 'hidden';
     };
     var startCall = function () {
         if (callType == 'video') {
