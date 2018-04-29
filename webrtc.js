@@ -357,6 +357,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                     else if (member.action == 'enter')
                     {
+                    	reset();
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
@@ -371,6 +372,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                     else if (member.action == 'enter')
                     {
+                    	reset();
                         isInitiatorVideo = false;
                         isInitiatorDataChannel = false;
                         createPeerConnection();
