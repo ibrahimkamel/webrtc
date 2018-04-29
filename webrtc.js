@@ -1,4 +1,5 @@
 'use strict';
+(function() {
 var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, endCallBtn, muteCallBtn, localVideoDiv,
     remoteVideoDiv, callType)
 {
@@ -38,19 +39,15 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         try
         {
-        	if (VideoPeerConnection==null)
-        	{
-        		VideoPeerConnection = new RTCPeerConnection(pcConfig);
-            	console.log('Video PeerConnection Created Successfully');
-	            VideoPeerConnection.onicecandidate = handleIceCandidate;
-	            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
-	            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
-	            if (isInitiatorVideo)
-	            {
-	                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
-	            }	
-        	}
-            
+            VideoPeerConnection = new RTCPeerConnection(pcConfig);
+            console.log('Video PeerConnection Created Successfully');
+            VideoPeerConnection.onicecandidate = handleIceCandidate;
+            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
+            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
+            if (isInitiatorVideo)
+            {
+                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+            }
         }
         catch (e)
         {
@@ -58,16 +55,13 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
         try
         {
-        	if (DataPeerConnection==null)
-        	{
-	            DataPeerConnection = new RTCPeerConnection(pcConfig);
-	            console.log('Data PeerConnection Created Successfully');
-	            DataPeerConnection.onicecandidate = handleIceCandidateData;
-	            if (isInitiatorDataChannel)
-	            {
-	                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-	            }
-	        }
+            DataPeerConnection = new RTCPeerConnection(pcConfig);
+            console.log('Data PeerConnection Created Successfully');
+            DataPeerConnection.onicecandidate = handleIceCandidateData;
+            if (isInitiatorDataChannel)
+            {
+                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
+            }
         }
         catch (e)
         {
@@ -391,3 +385,4 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     muteCallBtn.addEventListener("click", muteCall);
     var timer = setInterval(InitiateConnections, 500);
 };
+})();
