@@ -75,9 +75,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         startCallBtn.style.visibility = 'visible';
         endCallBtn.disabled = true;
         endCallBtn.style.visibility = 'hidden';
-        startCallBtn.onclick = function(){startCall()};
-        endCallBtn.onclick = function(){endCall()};
-        muteCallBtn.onclick = function(){muteCall()};
     };
     var startCall = function()
     {
@@ -204,8 +201,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             isDataChannel: true
         });
     };
-    var onCreateSessionDescriptionError = function(error) 
-    {
+    var onCreateSessionDescriptionError = function(error) {
         console.log('Failed to create session description: ' + error.toString());
     };
     var handleRemoteStreamAdded = function(event)
@@ -291,7 +287,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         if (ably && ably.auth && ably.auth.tokenDetails)
         {
-            clearInterval(timer);
+            window.clearInterval(timer);
             console.log(ably.auth.tokenDetails);
             channel = ably.channels.get(channelName);
             presence = channel.presence;
@@ -383,6 +379,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
 
     };
+    startCallBtn.addEventListener("click", startCall);
+    endCallBtn.addEventListener("click", endCall);
+    muteCallBtn.addEventListener("click", muteCall);
     var timer = setInterval(InitiateConnections, 500);
-    
 };
