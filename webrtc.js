@@ -1,5 +1,4 @@
 'use strict';
-(function() {
 var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, endCallBtn, muteCallBtn, localVideoDiv,
     remoteVideoDiv, callType)
 {
@@ -68,7 +67,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
     };
-
+    
     var activateButtons = function()
     {
 
@@ -299,17 +298,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 {
                     if (message.data.type === 'offer')
                     {
-                        if (message.data.isDataChannel)
-                        {
-                            DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                        }
-                        else
-                        {
-                            VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                        }
-                        doAnswer(message.data.isDataChannel);
-                        activateButtons();
+                    if (message.data.isDataChannel)
+                    {
+                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
                     }
+                    else
+                    {
+                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    doAnswer(message.data.isDataChannel);
+                    activateButtons();
+                }
                     else if (message.data.type === 'answer')
                     {
                     if (message.data.isDataChannel)
@@ -385,4 +384,3 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     muteCallBtn.addEventListener("click", muteCall);
     var timer = setInterval(InitiateConnections, 500);
 };
-})();
