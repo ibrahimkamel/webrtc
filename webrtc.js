@@ -352,10 +352,12 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 {
                     if (member.action == 'leave')
                     {
+                    	console.log('leave');
                         reset();
                     }
                     else if (member.action == 'enter')
                     {
+                    	console.log('enter');
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
@@ -365,10 +367,12 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 {
                     if (member.action == 'leave')
                     {
+                    	console.log('leave');
                         reset();
                     }
                     else if (member.action == 'enter')
                     {
+                    	console.log('enter');
                         isInitiatorVideo = false;
                         isInitiatorDataChannel = false;
                         createPeerConnection();
