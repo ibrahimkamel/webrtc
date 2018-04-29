@@ -75,6 +75,9 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         startCallBtn.style.visibility = 'visible';
         endCallBtn.disabled = true;
         endCallBtn.style.visibility = 'hidden';
+        startCallBtn.onclick = function(){startCall()};
+        endCallBtn.onclick = function(){endCall()};
+        muteCallBtn.onclick = function(){muteCall()};
     };
     var startCall = function()
     {
@@ -381,7 +384,5 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
 
     };
     var timer = setInterval(InitiateConnections, 500);
-    startCallBtn.addEventListener("click", startCall);
-    endCallBtn.addEventListener("click", endCall);
-    muteCallBtn.addEventListener("click", muteCall);
+    
 };
