@@ -166,7 +166,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var doAnswer = function(isDataChannelFlag)
     {
-    	console.log(isDataChannelFlag)
         if (isDataChannelFlag)
         {
             DataPeerConnection.createAnswer().then(setLocalAndSendMessageData, onCreateSessionDescriptionError);
@@ -270,17 +269,18 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var reset = function()
     {
         VideoPeerConnection.close();
+        DataPeerConnection.close();
+		console.log('VideoPeerConnection is closed.');
+        console.log('DataPeerConnection is closed.');
         VideoPeerConnection = null;
         isInitiatorVideo = false;
         remoteVideoStream = null;
         remoteVideoDiv.innerHTML = '';
         localVideoStream = null;
         localVideoDiv.innerHTML = '';
-        console.log('VideoPeerConnection is closed.');
-        DataPeerConnection.close();
         DataPeerConnection = null;
         isInitiatorDataChannel = false;
-        console.log('DataPeerConnection is closed.');
+        
     };
     var InitiateConnections = function()
     {
@@ -374,7 +374,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                 }
             });
-            sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
             return;
         }
 
