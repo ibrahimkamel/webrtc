@@ -52,20 +52,20 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         {
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
-        try
-        {
-            DataPeerConnection = new RTCPeerConnection(pcConfig);
-            console.log('Data PeerConnection Created Successfully');
-            DataPeerConnection.onicecandidate = handleIceCandidateData;
-            if (isInitiatorDataChannel)
-            {
-                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-            }
-        }
-        catch (e)
-        {
-            console.log('Failed to create Video PeerConnection, exception: ' + e.message);
-        }
+        // try
+        // {
+        //     DataPeerConnection = new RTCPeerConnection(pcConfig);
+        //     console.log('Data PeerConnection Created Successfully');
+        //     DataPeerConnection.onicecandidate = handleIceCandidateData;
+        //     if (isInitiatorDataChannel)
+        //     {
+        //         DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
+        //     }
+        // }
+        // catch (e)
+        // {
+        //     console.log('Failed to create Video PeerConnection, exception: ' + e.message);
+        // }
     };
 
     var activateButtons = function()
@@ -166,6 +166,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var doAnswer = function(isDataChannelFlag)
     {
+    	console.log(isDataChannelFlag);
         if (isDataChannelFlag)
         {
             DataPeerConnection.createAnswer().then(setLocalAndSendMessageData, onCreateSessionDescriptionError);
