@@ -7,14 +7,14 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var pcConfig = pcConfig;
     var isInitiatorVideo = false;
     var isInitiatorDataChannel = false;
-    var localVideoStream = undefined;
-    var remoteVideoStream = undefined;
+    var localVideoStream = null;
+    var remoteVideoStream = null;
     var localVideoDiv = localVideoDiv;
     var remoteVideoDiv = remoteVideoDiv;
-    var VideoPeerConnection = undefined;
-    var DataPeerConnection = undefined;
-    var presence = undefined;
-    var channel = undefined;
+    var VideoPeerConnection = null;
+    var DataPeerConnection = null;
+    var presence = null;
+    var channel = null;
     var ably = new Ably.Realtime({authUrl: '/auth/api/' + channelName});
     var callType = callType;
     var callMute = false;
@@ -67,14 +67,12 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
     };
-    
+
     var activateButtons = function()
     {
 
         startCallBtn.disabled = false;
         startCallBtn.style.visibility = 'visible';
-        endCallBtn.disabled = true;
-        endCallBtn.style.visibility = 'hidden';
     };
     var startCall = function()
     {
@@ -298,17 +296,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 {
                     if (message.data.type === 'offer')
                     {
-                    if (message.data.isDataChannel)
-                    {
-                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        if (message.data.isDataChannel)
+                        {
+                            DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        }
+                        else
+                        {
+                            VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        }
+                        doAnswer(message.data.isDataChannel);
+                        activateButtons();
                     }
-                    else
-                    {
-                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    doAnswer(message.data.isDataChannel);
-                    activateButtons();
-                }
                     else if (message.data.type === 'answer')
                     {
                     if (message.data.isDataChannel)
