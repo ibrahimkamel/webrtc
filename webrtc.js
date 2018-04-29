@@ -7,14 +7,14 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var pcConfig = pcConfig;
     var isInitiatorVideo = false;
     var isInitiatorDataChannel = false;
-    var localVideoStream = null;
-    var remoteVideoStream = null;
+    var localVideoStream = undefined;
+    var remoteVideoStream = undefined;
     var localVideoDiv = localVideoDiv;
     var remoteVideoDiv = remoteVideoDiv;
-    var VideoPeerConnection = null;
-    var DataPeerConnection = null;
-    var presence = null;
-    var channel = null;
+    var VideoPeerConnection = undefined;
+    var DataPeerConnection = undefined;
+    var presence = undefined;
+    var channel = undefined;
     var ably = new Ably.Realtime({authUrl: '/auth/api/' + channelName});
     var callType = callType;
     var callMute = false;
@@ -38,19 +38,15 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         try
         {
-        	if (!VideoPeerConnection)
-        	{
-        		VideoPeerConnection = new RTCPeerConnection(pcConfig);
-	            console.log('Video PeerConnection Created Successfully');
-	            VideoPeerConnection.onicecandidate = handleIceCandidate;
-	            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
-	            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
-	            if (isInitiatorVideo)
-	            {
-	                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
-	            }	
-        	}
-            
+            VideoPeerConnection = new RTCPeerConnection(pcConfig);
+            console.log('Video PeerConnection Created Successfully');
+            VideoPeerConnection.onicecandidate = handleIceCandidate;
+            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
+            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
+            if (isInitiatorVideo)
+            {
+                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+            }
         }
         catch (e)
         {
@@ -58,17 +54,13 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
         try
         {
-    		if (!DataPeerConnection)
-        	{
-        
-	            DataPeerConnection = new RTCPeerConnection(pcConfig);
-	            console.log('Data PeerConnection Created Successfully');
-	            DataPeerConnection.onicecandidate = handleIceCandidateData;
-	            if (isInitiatorDataChannel)
-	            {
-	                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-	            }
-	        }
+            DataPeerConnection = new RTCPeerConnection(pcConfig);
+            console.log('Data PeerConnection Created Successfully');
+            DataPeerConnection.onicecandidate = handleIceCandidateData;
+            if (isInitiatorDataChannel)
+            {
+                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
+            }
         }
         catch (e)
         {
@@ -81,6 +73,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
 
         startCallBtn.disabled = false;
         startCallBtn.style.visibility = 'visible';
+        endCallBtn.disabled = true;
+        endCallBtn.style.visibility = 'hidden';
     };
     var startCall = function()
     {
@@ -207,7 +201,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             isDataChannel: true
         });
     };
-    var onCreateSessionDescriptionError = function(error) {
+    var onCreateSessionDescriptionError = function(error) 
+    {
         console.log('Failed to create session description: ' + error.toString());
     };
     var handleRemoteStreamAdded = function(event)
@@ -277,18 +272,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var reset = function()
     {
         VideoPeerConnection.close();
-        DataPeerConnection.close();
-		console.log('VideoPeerConnection is closed.');
-        console.log('DataPeerConnection is closed.');
         VideoPeerConnection = null;
         isInitiatorVideo = false;
         remoteVideoStream = null;
         remoteVideoDiv.innerHTML = '';
         localVideoStream = null;
         localVideoDiv.innerHTML = '';
+        console.log('VideoPeerConnection is closed.');
+        DataPeerConnection.close();
         DataPeerConnection = null;
         isInitiatorDataChannel = false;
-        
+        console.log('DataPeerConnection is closed.');
     };
     var InitiateConnections = function()
     {
@@ -386,8 +380,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
 
     };
+    var timer = setInterval(InitiateConnections, 500);
     startCallBtn.addEventListener("click", startCall);
     endCallBtn.addEventListener("click", endCall);
     muteCallBtn.addEventListener("click", muteCall);
-    var timer = setInterval(InitiateConnections, 500);
 };
