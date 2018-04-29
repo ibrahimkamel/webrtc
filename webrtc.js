@@ -270,6 +270,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var reset = function()
     {
+    	if(!VideoPeerConnection)
         VideoPeerConnection.close();
         VideoPeerConnection = null;
         isInitiatorVideo = false;
@@ -278,6 +279,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         localVideoStream = null;
         localVideoDiv.innerHTML = '';
         console.log('VideoPeerConnection is closed.');
+        if(!DataPeerConnection)
         DataPeerConnection.close();
         DataPeerConnection = null;
         isInitiatorDataChannel = false;
