@@ -78,6 +78,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var startCall = function()
     {
+    	console.log("clicked");
         if (callType == 'video')
         {
             navigator.mediaDevices.getUserMedia(
@@ -103,6 +104,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var gotStream = function(stream)
     {
+
         localVideoStream = stream;
         var video = document.createElement("video");
         video.setAttribute("playsinline", "");
