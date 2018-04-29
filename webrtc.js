@@ -348,6 +348,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             presence.enter();
             presence.subscribe(function(member)
             {
+            	console.log(member.action);
                 if (member.clientId != ably.auth.tokenDetails.clientId)
                 {
                     if (member.action == 'leave')
