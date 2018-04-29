@@ -78,7 +78,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var startCall = function()
     {
-    	console.log("clicked");
         if (callType == 'video')
         {
             navigator.mediaDevices.getUserMedia(
@@ -104,7 +103,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var gotStream = function(stream)
     {
-
         localVideoStream = stream;
         var video = document.createElement("video");
         video.setAttribute("playsinline", "");
@@ -289,7 +287,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         if (ably && ably.auth && ably.auth.tokenDetails)
         {
-            window.clearInterval(timer);
+            clearInterval(timer);
             console.log(ably.auth.tokenDetails);
             channel = ably.channels.get(channelName);
             presence = channel.presence;
@@ -350,17 +348,14 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             presence.enter();
             presence.subscribe(function(member)
             {
-            	console.log(member.action);
                 if (member.clientId != ably.auth.tokenDetails.clientId)
                 {
                     if (member.action == 'leave')
                     {
-                    	console.log('leave');
                         reset();
                     }
-                    else if (member.action == 'enter')
+                    else if (member.action == 'present')
                     {
-                    	console.log('enter');
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
@@ -370,12 +365,10 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 {
                     if (member.action == 'leave')
                     {
-                    	console.log('leave');
                         reset();
                     }
-                    else if (member.action == 'enter')
+                    else if (member.action == 'present')
                     {
-                    	console.log('enter');
                         isInitiatorVideo = false;
                         isInitiatorDataChannel = false;
                         createPeerConnection();
