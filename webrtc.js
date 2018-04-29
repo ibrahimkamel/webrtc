@@ -32,7 +32,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         message['userName'] = userName;
         channel.publish(channelName, JSON.stringify(message));
-        // console.log('Message Sent on Channel from : ' + userName + ' : '+ JSON.stringify(message));
+        console.log('Message Sent on Channel from : ' + userName + ' : '+ JSON.stringify(message));
     };
     var createPeerConnection = function()
     {
@@ -52,20 +52,20 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         {
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
-        // try
-        // {
-        //     DataPeerConnection = new RTCPeerConnection(pcConfig);
-        //     console.log('Data PeerConnection Created Successfully');
-        //     DataPeerConnection.onicecandidate = handleIceCandidateData;
-        //     if (isInitiatorDataChannel)
-        //     {
-        //         DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-        //     }
-        // }
-        // catch (e)
-        // {
-        //     console.log('Failed to create Video PeerConnection, exception: ' + e.message);
-        // }
+        try
+        {
+            DataPeerConnection = new RTCPeerConnection(pcConfig);
+            console.log('Data PeerConnection Created Successfully');
+            DataPeerConnection.onicecandidate = handleIceCandidateData;
+            if (isInitiatorDataChannel)
+            {
+                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
+            }
+        }
+        catch (e)
+        {
+            console.log('Failed to create Video PeerConnection, exception: ' + e.message);
+        }
     };
 
     var activateButtons = function()
@@ -166,7 +166,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var doAnswer = function(isDataChannelFlag)
     {
-    	console.log(isDataChannelFlag);
+    	console.log(isDataChannelFlag)
         if (isDataChannelFlag)
         {
             DataPeerConnection.createAnswer().then(setLocalAndSendMessageData, onCreateSessionDescriptionError);
@@ -374,6 +374,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                 }
             });
+            sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
             return;
         }
 
