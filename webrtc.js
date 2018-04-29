@@ -38,15 +38,19 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         try
         {
-            VideoPeerConnection = new RTCPeerConnection(pcConfig);
-            console.log('Video PeerConnection Created Successfully');
-            VideoPeerConnection.onicecandidate = handleIceCandidate;
-            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
-            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
-            if (isInitiatorVideo)
-            {
-                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
-            }
+        	if (!VideoPeerConnection)
+        	{
+        		VideoPeerConnection = new RTCPeerConnection(pcConfig);
+	            console.log('Video PeerConnection Created Successfully');
+	            VideoPeerConnection.onicecandidate = handleIceCandidate;
+	            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
+	            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
+	            if (isInitiatorVideo)
+	            {
+	                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+	            }	
+        	}
+            
         }
         catch (e)
         {
@@ -54,13 +58,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
         try
         {
-            DataPeerConnection = new RTCPeerConnection(pcConfig);
-            console.log('Data PeerConnection Created Successfully');
-            DataPeerConnection.onicecandidate = handleIceCandidateData;
-            if (isInitiatorDataChannel)
-            {
-                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-            }
+    		if (!DataPeerConnection)
+        	{
+        
+	            DataPeerConnection = new RTCPeerConnection(pcConfig);
+	            console.log('Data PeerConnection Created Successfully');
+	            DataPeerConnection.onicecandidate = handleIceCandidateData;
+	            if (isInitiatorDataChannel)
+	            {
+	                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
+	            }
+	        }
         }
         catch (e)
         {
