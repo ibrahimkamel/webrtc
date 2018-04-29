@@ -38,15 +38,19 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         try
         {
-            VideoPeerConnection = new RTCPeerConnection(pcConfig);
-            console.log('Video PeerConnection Created Successfully');
-            VideoPeerConnection.onicecandidate = handleIceCandidate;
-            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
-            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
-            if (isInitiatorVideo)
-            {
-                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
-            }
+        	if (VideoPeerConnection==null)
+        	{
+        		VideoPeerConnection = new RTCPeerConnection(pcConfig);
+            	console.log('Video PeerConnection Created Successfully');
+	            VideoPeerConnection.onicecandidate = handleIceCandidate;
+	            VideoPeerConnection.onaddstream = handleRemoteStreamAdded;
+	            VideoPeerConnection.onremovestream = handleRemoteStreamRemoved;
+	            if (isInitiatorVideo)
+	            {
+	                VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
+	            }	
+        	}
+            
         }
         catch (e)
         {
@@ -54,13 +58,16 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         }
         try
         {
-            DataPeerConnection = new RTCPeerConnection(pcConfig);
-            console.log('Data PeerConnection Created Successfully');
-            DataPeerConnection.onicecandidate = handleIceCandidateData;
-            if (isInitiatorDataChannel)
-            {
-                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-            }
+        	if (DataPeerConnection==null)
+        	{
+	            DataPeerConnection = new RTCPeerConnection(pcConfig);
+	            console.log('Data PeerConnection Created Successfully');
+	            DataPeerConnection.onicecandidate = handleIceCandidateData;
+	            if (isInitiatorDataChannel)
+	            {
+	                DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
+	            }
+	        }
         }
         catch (e)
         {
@@ -291,6 +298,60 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             console.log(ably.auth.tokenDetails);
             channel = ably.channels.get(channelName);
             presence = channel.presence;
+            channel.subscribe(channelName, function(message)
+            {
+                message.data = JSON.parse(message.data);
+                if (message.data.userName != userName)
+                {
+                    if (message.data.type === 'offer')
+                    {
+                        if (message.data.isDataChannel)
+                        {
+                            DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        }
+                        else
+                        {
+                            VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        }
+                        doAnswer(message.data.isDataChannel);
+                        activateButtons();
+                    }
+                    else if (message.data.type === 'answer')
+                    {
+                    if (message.data.isDataChannel)
+                    {
+                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    else
+                    {
+                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                    }
+                    activateButtons();
+                }
+                    else if (message.data.type === 'candidate')
+                    {
+                    if (message.data.isDataChannel)
+                    {
+                        var candidate = new RTCIceCandidate(
+                        {
+                            sdpMLineIndex: message.data.label,
+                            candidate: message.data.candidate
+                        });
+                        DataPeerConnection.addIceCandidate(candidate);
+                    }
+                    else
+                    {
+                        var candidate = new RTCIceCandidate(
+                        {
+                            sdpMLineIndex: message.data.label,
+                            candidate: message.data.candidate
+                        });
+                        VideoPeerConnection.addIceCandidate(candidate);
+                    }
+                }
+                }
+
+            });
             presence.enter();
             presence.subscribe(function(member)
             {
@@ -300,65 +361,11 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     {
                         reset();
                     }
-                    else if (member.action == 'present')
+                    else if (member.action == 'enter')
                     {
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
-                        channel.subscribe(channelName, function(message)
-            {
-                message.data = JSON.parse(message.data);
-                if (message.data.userName != userName)
-                {
-                    if (message.data.type === 'offer')
-                    {
-                        if (message.data.isDataChannel)
-                        {
-                            DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                        }
-                        else
-                        {
-                            VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                        }
-                        doAnswer(message.data.isDataChannel);
-                        activateButtons();
-                    }
-                    else if (message.data.type === 'answer')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    else
-                    {
-                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    activateButtons();
-                }
-                    else if (message.data.type === 'candidate')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        var candidate = new RTCIceCandidate(
-                        {
-                            sdpMLineIndex: message.data.label,
-                            candidate: message.data.candidate
-                        });
-                        DataPeerConnection.addIceCandidate(candidate);
-                    }
-                    else
-                    {
-                        var candidate = new RTCIceCandidate(
-                        {
-                            sdpMLineIndex: message.data.label,
-                            candidate: message.data.candidate
-                        });
-                        VideoPeerConnection.addIceCandidate(candidate);
-                    }
-                }
-                }
-
-            });
                     }
                 }
                 else if (member.clientId == ably.auth.tokenDetails.clientId)
@@ -367,65 +374,11 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     {
                         reset();
                     }
-                    else if (member.action == 'present')
+                    else if (member.action == 'enter')
                     {
                         isInitiatorVideo = false;
                         isInitiatorDataChannel = false;
                         createPeerConnection();
-                        channel.subscribe(channelName, function(message)
-            {
-                message.data = JSON.parse(message.data);
-                if (message.data.userName != userName)
-                {
-                    if (message.data.type === 'offer')
-                    {
-                        if (message.data.isDataChannel)
-                        {
-                            DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                        }
-                        else
-                        {
-                            VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                        }
-                        doAnswer(message.data.isDataChannel);
-                        activateButtons();
-                    }
-                    else if (message.data.type === 'answer')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    else
-                    {
-                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    activateButtons();
-                }
-                    else if (message.data.type === 'candidate')
-                    {
-                    if (message.data.isDataChannel)
-                    {
-                        var candidate = new RTCIceCandidate(
-                        {
-                            sdpMLineIndex: message.data.label,
-                            candidate: message.data.candidate
-                        });
-                        DataPeerConnection.addIceCandidate(candidate);
-                    }
-                    else
-                    {
-                        var candidate = new RTCIceCandidate(
-                        {
-                            sdpMLineIndex: message.data.label,
-                            candidate: message.data.candidate
-                        });
-                        VideoPeerConnection.addIceCandidate(candidate);
-                    }
-                }
-                }
-
-            });
                     }
                 }
             });
