@@ -32,7 +32,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         message['userName'] = userName;
         channel.publish(channelName, JSON.stringify(message));
-        console.log('Message Sent on Channel from : ' + userName + ' : '+ JSON.stringify(message));
+        // console.log('Message Sent on Channel from : ' + userName + ' : '+ JSON.stringify(message));
     };
     var createPeerConnection = function()
     {
