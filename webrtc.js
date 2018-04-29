@@ -350,6 +350,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             {
                 if (member.clientId != ably.auth.tokenDetails.clientId)
                 {
+                	console.log("him"+member.action);
                     if (member.action == 'leave')
                     {
                         reset();
@@ -363,6 +364,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 }
                 else if (member.clientId == ably.auth.tokenDetails.clientId)
                 {
+                	console.log("me"+member.action);
                     if (member.action == 'leave')
                     {
                         reset();
