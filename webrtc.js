@@ -79,11 +79,11 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var startCall = function()
     {
     	var callTypeFlag;
-        if (callType == 'video')
+        if (callType === 'video')
         {
             callTypeFlag = true;
         }
-        else(callType == 'audio')
+        else if (callType === 'audio')
         {
          	callTypeFlag = false;   
         }
@@ -277,6 +277,12 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         DataPeerConnection;
         isInitiatorDataChannel = false;
         console.log('DataPeerConnection is closed.');
+        startCallBtn.disabled = false;
+        startCallBtn.style.visibility = 'visible';
+        endCallBtn.disabled = true;
+        endCallBtn.style.visibility = 'hidden';
+        muteCallBtn.disabled = true;
+        muteCallBtn.style.visibility = 'hidden';
     };
     var InitiateConnections = function()
     {
@@ -302,7 +308,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                             VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
                         }
                         doAnswer(message.data.isDataChannel);
-                        activateButtons();
+                        // activateButtons();
                     }
                     else if (message.data.type === 'answer')
                     {
@@ -314,7 +320,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     {
                         VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
                     }
-                    activateButtons();
+                    // activateButtons();
                 }
                     else if (message.data.type === 'candidate')
                     {
@@ -351,29 +357,31 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                     else if (member.action == 'enter')
                     {
+                    	reset();
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
                     }
                 }
-                // else if (member.clientId == ably.auth.tokenDetails.clientId)
-                // {
-                //     if (member.action == 'leave')
-                //     {
-                //         reset();
-                //     }
-                //     else if (member.action == 'enter')
-                //     {
-                //         isInitiatorVideo = false;
-                //         isInitiatorDataChannel = false;
-                //         createPeerConnection();
-                //     }
-                // }
+                else if (member.clientId == ably.auth.tokenDetails.clientId)
+                {
+                    if (member.action == 'leave')
+                    {
+                        reset();
+                    }
+                    else if (member.action == 'enter')
+                    {
+                        isInitiatorVideo = false;
+                        isInitiatorDataChannel = false;
+                        createPeerConnection();
+                    }
+                }
             });
-            sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
-            
+            activateButtons();
+            // sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
+        	return;    
         }
-        return;
+        
 
     };
     startCallBtn.addEventListener("click", startCall);
