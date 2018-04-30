@@ -1,0 +1,49 @@
+ <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
+ <script src="https://cdn.WebRTC-Experiment.com/getScreenId.js"></script>
+ <script src="https://vircrew.com.au/static/js/webrtc.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.16/moment-timezone.min.js"></script>
+ <button id="startCallBtn">call</button>
+ <button id="endCallBtn">end</button>
+ <button id="muteCallBtn">mute</button>
+ <div id="localVideoDiv" style="width: 110px;height: 110px;"></div>
+ <div id="remoteVideoDiv" style="width: 110px;height: 110px;"></div>
+ <br>
+ <button id="chatSendBtn">send</button>
+ <input type="text" id="chatMessageInput">
+ <div id="chatMessageDiv"></div>
+ <div id="localVideoScreenDiv" style="width: 110px;height: 110px;"></div>
+ <div id="remoteVideoScreenDiv" style="width: 110px;height: 110px;"></div>
+ <button id="shareScreenBtn">share screen</button>
+ <div id="fileShareDiv"></div>
+<script>
+
+var startCallBtn = document.getElementById('startCallBtn');
+var endCallBtn = document.getElementById('endCallBtn');
+var muteCallBtn = document.getElementById('muteCallBtn');
+var localVideoDiv = document.getElementById('localVideoDiv');
+var remoteVideoDiv = document.getElementById('remoteVideoDiv');
+
+var chatSendBtn = document.getElementById('chatSendBtn');
+var chatMessageInput = document.getElementById('chatMessageInput');
+var chatMessageDiv = document.getElementById('chatMessageDiv');
+var localVideoScreenDiv = document.getElementById('localVideoScreenDiv');
+var remoteVideoScreenDiv = document.getElementById('remoteVideoScreenDiv');
+var shareScreenBtn = document.getElementById('shareScreenBtn');
+var fileShareDiv = document.getElementById('fileShareDiv');
+function guidGenerator() {
+    var S4 = function() {
+       return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+    };
+    return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+new WebrtcConnection(guidGenerator(), 'hamada',
+{
+    'iceServers': [
+    {
+        'urls': 'stun:stun.l.google.com:19302'
+    }]
+}, startCallBtn, endCallBtn, muteCallBtn, localVideoDiv, remoteVideoDiv, 'video',
+chatSendBtn,chatMessageInput,chatMessageDiv,localVideoScreenDiv,remoteVideoScreenDiv,
+shareScreenBtn,fileShareDiv);
+</script>
