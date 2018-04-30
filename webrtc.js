@@ -370,7 +370,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                 }
             });
-            sendMessage({"msg": username + " has joined the meeting.", 'type': "msg"});
+            sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
             
         }
         return;
