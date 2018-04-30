@@ -556,7 +556,7 @@ var bitrateMax = 0;
                   // enable file sending on connnect
                   if(fileinput)
                   {
-                      fileinput.removeAttribute('disabled');
+                      fileinput.style.disabled = false;
                   }
                 fileinput.addEventListener('change', function () {
                     handleFileInputChange();
@@ -697,7 +697,7 @@ var shareScreen = function()
     localVideoScreenStream = null;
     localVideoScreenDiv.innerHTML = '';
     DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-    shareScreenBtn.removeAttr('class');
+    shareScreenBtn.className = '';
           shareScreenBtn.innerHTML = '<i class="fa fa-desktop mr-xs"></i> Share My Screen';
           is_screenshared = false;
 //    endButtonScreen.classList.add('hidden');
@@ -848,7 +848,7 @@ var displayStats = function () {
 var closeDataChannels = function () {
     console.log('Closing data channels');
     sentitem.lastChild.appendChild(document.createTextNode('sent'));
-    fileinput.removeAttribute('disabled');
+    fileinput.style.disabled = false;
 };
 
     startCallBtn.addEventListener("click", startCall);
