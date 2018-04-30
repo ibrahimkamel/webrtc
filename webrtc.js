@@ -356,19 +356,19 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                         createPeerConnection();
                     }
                 }
-                else if (member.clientId == ably.auth.tokenDetails.clientId)
-                {
-                    if (member.action == 'leave')
-                    {
-                        reset();
-                    }
-                    else if (member.action == 'enter')
-                    {
-                        isInitiatorVideo = false;
-                        isInitiatorDataChannel = false;
-                        createPeerConnection();
-                    }
-                }
+                // else if (member.clientId == ably.auth.tokenDetails.clientId)
+                // {
+                //     if (member.action == 'leave')
+                //     {
+                //         reset();
+                //     }
+                //     else if (member.action == 'enter')
+                //     {
+                //         isInitiatorVideo = false;
+                //         isInitiatorDataChannel = false;
+                //         createPeerConnection();
+                //     }
+                // }
             });
             sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
             
