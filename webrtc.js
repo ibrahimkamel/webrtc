@@ -7,17 +7,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var pcConfig = pcConfig;
     var isInitiatorVideo = false;
     var isInitiatorDataChannel = false;
-    var localVideoStream = undefined;
-    var remoteVideoStream = undefined;
+    var localVideoStream;
+    var remoteVideoStream;
     var localVideoDiv = localVideoDiv;
     var remoteVideoDiv = remoteVideoDiv;
-    var VideoPeerConnection = undefined;
-    var DataPeerConnection = undefined;
-    var presence = undefined;
-    var channel = undefined;
+    var VideoPeerConnection;
+    var DataPeerConnection;
+    var presence;
+    var channel;
     var ably = new Ably.Realtime({authUrl: '/auth/api/' + channelName});
     var callType = callType;
-    var callMute = false;
+    var callMute = true;
     var startCallBtn = startCallBtn;
     var endCallBtn = endCallBtn;
     startCallBtn.disabled = true;
@@ -67,7 +67,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             console.log('Failed to create Video PeerConnection, exception: ' + e.message);
         }
     };
-    
+
     var activateButtons = function()
     {
 
@@ -78,28 +78,23 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var startCall = function()
     {
+    	var callTypeFlag;
         if (callType == 'video')
         {
-            navigator.mediaDevices.getUserMedia(
-            {
-                audio: !callMute,
-                video: true
-            }).then(gotStream).catch(function(e)
-            {
-                alert('getUserMedia() error: ' + e.name);
-            });
+            callTypeFlag = true;
         }
         else(callType == 'audio')
         {
-            navigator.mediaDevices.getUserMedia(
+         	callTypeFlag = false;   
+        }
+        navigator.mediaDevices.getUserMedia(
             {
-                audio: !callMute,
-                video: false
+                audio: callMute,
+                video: callTypeFlag
             }).then(gotStream).catch(function(e)
             {
                 alert('getUserMedia() error: ' + e.name);
             });
-        }
     };
     var gotStream = function(stream)
     {
@@ -257,7 +252,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var endCall = function()
     {
         VideoPeerConnection.removeStream(localVideoStream);
-        localVideoStream = null;
+        localVideoStream;
         localVideoDiv.innerHTML = '';
         VideoPeerConnection.createOffer(setLocalAndSendMessage, handleCreateOfferError);
         startCallBtn.disabled = false;
@@ -270,18 +265,16 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     };
     var reset = function()
     {
-    	if(VideoPeerConnection)
         VideoPeerConnection.close();
-        VideoPeerConnection = null;
+        VideoPeerConnection;
         isInitiatorVideo = false;
-        remoteVideoStream = null;
+        remoteVideoStream;
         remoteVideoDiv.innerHTML = '';
-        localVideoStream = null;
+        localVideoStream;
         localVideoDiv.innerHTML = '';
         console.log('VideoPeerConnection is closed.');
-        if(DataPeerConnection)
         DataPeerConnection.close();
-        DataPeerConnection = null;
+        DataPeerConnection;
         isInitiatorDataChannel = false;
         console.log('DataPeerConnection is closed.');
     };
@@ -300,17 +293,17 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 {
                     if (message.data.type === 'offer')
                     {
-                    if (message.data.isDataChannel)
-                    {
-                        DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        if (message.data.isDataChannel)
+                        {
+                            DataPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        }
+                        else
+                        {
+                            VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
+                        }
+                        doAnswer(message.data.isDataChannel);
+                        activateButtons();
                     }
-                    else
-                    {
-                        VideoPeerConnection.setRemoteDescription(new RTCSessionDescription(message.data));
-                    }
-                    doAnswer(message.data.isDataChannel);
-                    activateButtons();
-                }
                     else if (message.data.type === 'answer')
                     {
                     if (message.data.isDataChannel)
@@ -352,14 +345,12 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             {
                 if (member.clientId != ably.auth.tokenDetails.clientId)
                 {
-                	console.log("him"+member.action);
                     if (member.action == 'leave')
                     {
                         reset();
                     }
                     else if (member.action == 'enter')
                     {
-                    	reset();
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
@@ -367,22 +358,22 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 }
                 else if (member.clientId == ably.auth.tokenDetails.clientId)
                 {
-                	console.log("me"+member.action);
                     if (member.action == 'leave')
                     {
                         reset();
                     }
                     else if (member.action == 'enter')
                     {
-                    	reset();
                         isInitiatorVideo = false;
                         isInitiatorDataChannel = false;
                         createPeerConnection();
                     }
                 }
             });
-            return;
+            sendMessage({"msg": username + " has joined the meeting.", 'type': "msg"});
+            
         }
+        return;
 
     };
     startCallBtn.addEventListener("click", startCall);
