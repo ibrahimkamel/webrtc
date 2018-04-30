@@ -277,7 +277,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         DataPeerConnection;
         isInitiatorDataChannel = false;
         console.log('DataPeerConnection is closed.');
-        startCallBtn.disabled = false;
+        startCallBtn.disabled = true;
         startCallBtn.style.visibility = 'visible';
         endCallBtn.disabled = true;
         endCallBtn.style.visibility = 'hidden';
@@ -361,6 +361,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                         isInitiatorVideo = true;
                         isInitiatorDataChannel = true;
                         createPeerConnection();
+                        activateButtons();
                     }
                 }
                 else if (member.clientId == ably.auth.tokenDetails.clientId)
@@ -371,13 +372,15 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     }
                     else if (member.action == 'enter')
                     {
+
                         isInitiatorVideo = false;
                         isInitiatorDataChannel = false;
                         createPeerConnection();
+                        activateButtons();
                     }
                 }
             });
-            activateButtons();
+            
             // sendMessage({"msg": userName + " has joined the meeting.", 'type': "msg"});
         	return;    
         }
