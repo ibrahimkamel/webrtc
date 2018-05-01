@@ -48,7 +48,6 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     var shareFileMessage = document.createElement("i");
     shareFileMessage.innerHTML = "Waiting for the connection to be established...";
     var container;
-    var peername;
     var filelist;
     var fileinput;
     var recievedfile;
@@ -133,6 +132,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             });
             msg = msg.replace(userName + " : ", "me : ");
             var chatMessage = document.createElement('p');
+            chatMessage.classList.add('local-chat-message');
             chatMessage.innerHTML = msg + moment().fromNow();
             chatMessageDiv.prepend(chatMessage);
             chatMessageInput.value = '';
@@ -153,6 +153,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 });
                 msg = msg.replace(userName + " : ", "me : ");
                 var chatMessage = document.createElement('p');
+                chatMessage.classList.add('local-chat-message');
                 chatMessage.innerHTML = msg + moment().fromNow();
                 chatMessageDiv.prepend(chatMessage);
                 chatMessageInput.value = '';
@@ -184,6 +185,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         localVideoStream = stream;
         var video = document.createElement("video");
+        video.classList.add('local-video');
         video.setAttribute("playsinline", "");
         video.autoplay = true;
         video.srcObject = stream;
@@ -286,6 +288,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         remoteVideoStream = event.stream;
         var video = document.createElement("video");
+        video.classList.add('local-video');
         video.setAttribute("playsinline", "");
         video.autoplay = true;
         video.srcObject = event.stream;
@@ -445,12 +448,14 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                             {
                                 m.msg = m.msg.replace(userName + " : ", "me : ");
                                 var chatMessage = document.createElement('p');
+                                chatMessage.classList.add('local-chat-message');
                                 chatMessage.innerHTML = m.msg + moment().fromNow();
                                 chatMessageDiv.prepend(chatMessage);
                             }
                             else
                             {
                                 var chatMessage = document.createElement('p');
+                                chatMessage.classList.add('remote-chat-message');
                                 chatMessage.innerHTML = m.msg + moment().fromNow();
                                 chatMessageDiv.prepend(chatMessage);
                             }
@@ -513,6 +518,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     {
                         message.data.msg = message.data.msg.replace(userName + " : ", "me : ");
                         var chatMessage = document.createElement('p');
+                        chatMessage.classList.add('remote-chat-message');
                         chatMessage.innerHTML = message.data.msg + moment().fromNow();
                         chatMessageDiv.prepend(chatMessage);
                     }
@@ -521,34 +527,36 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                         console.log(message.data);
                         recievedfile = message.data;
                         recieveditem = document.createElement('li');
-                        recieveditem.className = 'receiving';
+                        recieveditem.classList.add('receiving-file');
                         // make a label
                         var div_row = document.createElement('div');
-                        div_row.className = 'row';
+                        div_row.classList.add('receiving-file-container');
                         var div_col = document.createElement('div');
-                        div_col.className = 'col-xs-3';
+                        div_col.classList.add('receiving-file-name-container');
                         var span = document.createElement('span');
-                        span.className = 'filename';
+                        span.classList.add('receiving-file-name');
                         span.appendChild(document.createTextNode(recievedfile.name));
                         div_col.appendChild(span);
                         div_row.appendChild(div_col);
                         //                          item.appendChild(span);
                         var div_col = document.createElement('div');
-                        div_col.className = 'col-xs-3';
+                        div_col.classList.add('receiving-file-size-container');
                         span = document.createElement('span');
+                        span.classList.add('receiving-file-size');
                         span.appendChild(document.createTextNode(recievedfile.size + ' bytes'));
                         div_col.appendChild(span);
                         div_row.appendChild(div_col);
                         recieveditem.appendChild(div_row);
                         filelist.appendChild(recieveditem);
                         var div_col = document.createElement('div');
-                        div_col.className = 'col-xs-3';
+                        div_col.classList.add('receiving-file-progress-container');
                         receiveProgress = document.createElement('progress');
+                        receiveProgress.classList.add('receiving-file-progress');
                         div_col.appendChild(receiveProgress);
                         receiveProgress.max = recievedfile.size;
                         div_row.appendChild(div_col);
                         var div_col = document.createElement('div');
-                        div_col.className = 'col-xs-3';
+                        div_col.classList.add('receiving-file-download-container');
                         div_row.appendChild(div_col);
                     }
                 }
@@ -596,20 +604,12 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 'type': "msg"
             });
             container = document.createElement('div');
-            container.className = 'peerContainer';
-            container.id = 'container_' + userName;
-            // show the peer id
-            peername = document.createElement('div');
-            peername.className = 'peerName';
-            peername.appendChild(document.createTextNode('Peer: ' + userName));
-            // container.appendChild(peername);
-            // show a list of files received / sending
+            container.classList.add('file-sharing-container');
             filelist = document.createElement('ul');
-            filelist.className = 'fileList';
-            filelist.classList.add('list-unstyled')
+            filelist.classList.add('file-sharing-list');
             container.appendChild(filelist);
-            // show a file select form
             fileinput = document.createElement('input');
+            fileinput.classList.add('file-sharing-input');
             fileinput.type = 'file';
             shareFileMessage.style.visibility = 'hidden';
             fileinput.disabled = true;
@@ -636,39 +636,38 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                 fileinput.disabled = true;
             }
             var div_row = document.createElement('div');
-            div_row.className = 'row';
+            div_row.classList.add('sending-file-container');
             // create a file item
             sentitem = document.createElement('li');
-            sentitem.className = 'sending';
+            sentitem.classList.add('sending-file');
             // make a label
             var div_col = document.createElement('div');
-            div_col.className = 'col-xs-3';
+            div_col.classList.add('sending-file-name-container');
             span = document.createElement('span');
-            span.className = 'filename';
+            span.classList.add('sending-file-name');
             span.appendChild(document.createTextNode(sentfile.name));
             div_col.appendChild(span);
             div_row.appendChild(div_col);
             //                    item.appendChild(span);
             span = document.createElement('span');
+            span.classList.add('sending-file-size');
             span.appendChild(document.createTextNode(sentfile.size + ' bytes'));
             var div_col = document.createElement('div');
-            div_col.className = 'col-xs-3';
+            span.classList.add('sending-file-size-container');
             div_col.appendChild(span);
             div_row.appendChild(div_col);
-            //                            var div_col = document.createElement('div');
-            //                            div_col.className = 'col-xs-3';
             div_row.appendChild(div_col);
             sentitem.appendChild(div_row);
             filelist.appendChild(sentitem);
-            // create a progress element
             var div_col = document.createElement('div');
-            div_col.className = 'col-xs-3';
+            div_col.classList.add('sending-file-progress-container');
             sendProgress = document.createElement('progress');
+            sendProgress.classList.add('sending-file-progress');
             sendProgress.max = sentfile.size;
             div_col.appendChild(sendProgress);
             div_row.appendChild(div_col);
             var div_col = document.createElement('div');
-            div_col.className = 'col-xs-3';
+            div_col.classList.add('sending-file-status-container');
             div_row.appendChild(div_col);
             sendMessage(
             {
@@ -695,6 +694,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
     {
         console.log('Remote screen stream added.');
         var video = document.createElement("video");
+        video.classList.add('remote-screen-video');
         video.setAttribute("playsinline", "");
         video.autoplay = true;
         video.srcObject = event.stream;
@@ -744,12 +744,14 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                         localVideoScreenDiv.innerHTML = '';
                         DataPeerConnection.createOffer(setLocalAndSendMessageData,
                             handleCreateOfferError);
-                        shareScreenBtn.className = '';
+                        shareScreenBtn.classList.add('share-screen');
+                        shareScreenBtn.classList.remove('screen-shared');
                         shareScreenBtn.innerHTML =
                             '<i class="fa fa-desktop mr-xs"></i> Share My Screen';
                         is_screenshared = false;
                     };
                     var video = document.createElement("video");
+                    video.classList.add('local-screen-video');
                     video.setAttribute("playsinline", "");
                     video.autoplay = true;
                     video.srcObject = stream;
@@ -759,7 +761,8 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
                     DataPeerConnection.addStream(localVideoScreenStream);
                     DataPeerConnection.createOffer(setLocalAndSendMessageData,
                         handleCreateOfferError);
-                    shareScreenBtn.className = 'pressed';
+                    shareScreenBtn.classList.add('screen-shared');
+                    shareScreenBtn.classList.remove('share-screen');
                     shareScreenBtn.innerHTML =
                         '<i class="fa fa-desktop mr-xs"></i> Stop Sharing My Screen';
                     is_screenshared = true;
@@ -787,10 +790,10 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             localVideoScreenStream = null;
             localVideoScreenDiv.innerHTML = '';
             DataPeerConnection.createOffer(setLocalAndSendMessageData, handleCreateOfferError);
-            shareScreenBtn.className = '';
+            shareScreenBtn.classList.add('share-screen');
+            shareScreenBtn.classList.remove('screen-shared');
             shareScreenBtn.innerHTML = '<i class="fa fa-desktop mr-xs"></i> Share My Screen';
             is_screenshared = false;
-            //    endButtonScreen.classList.add('hidden');
         }
     }
     var receiveChannelCallback = function(event)
@@ -803,16 +806,9 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
         receiveChannel.onclose = onReceiveChannelStateChange;
         receivedSize = 0;
         bitrateMax = 0;
-        //    downloadAnchor.textContent = '';
-        //    downloadAnchor.removeAttribute('download');
-        //    if (downloadAnchor.href) {
-        //        URL.revokeObjectURL(downloadAnchor.href);
-        //        downloadAnchor.removeAttribute('href');
-        //    }
     };
     var onReceiveMessageCallback = function(event)
     {
-        // console.log('Received Message ' + event.data.byteLength);
         receiveBuffer.push(event.data);
         receivedSize += event.data.byteLength;
         receiveProgress.value = receivedSize;
@@ -823,6 +819,7 @@ var WebrtcConnection = function(userName, channelName, pcConfig, startCallBtn, e
             var received = new window.Blob(receiveBuffer);
             receiveBuffer = [];
             var href = document.createElement('a');
+            href.classList.add('received-file');
             href.href = URL.createObjectURL(received);
             href.download = recievedfile.name;
             href.appendChild(document.createTextNode('download'));
